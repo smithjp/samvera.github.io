@@ -187,6 +187,10 @@ entries:
       url: /pcdm.html
       output: web
 
+    - title: Workflow and Mediated Deposit
+      url: /workflow_and_mediated_deposit.html
+      output: web
+
     - title: Writing Hyrax Plugins
       url: /plugins.html
       output: web
