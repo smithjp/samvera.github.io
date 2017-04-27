@@ -40,7 +40,7 @@ In order to use the mediated deposit workflow, you first need to create a new Ad
       - archivist1@example.com
   ```
 
-  Now, if you log in via the admin user, you should see an menu called "Administration" in the top left corner. Under it, you should see a menu item on the left called "Administrative Sets." Under that menu, you can create a new administrative set. Give it a name and description and click save. Now you can assign it a workflow under the "Workflow" tab that will appear. You will also need to give it participants under the `participants` tab. 
+  Now, if you log in via the admin user, you should see an menu called "Administration" in the top left corner. Under it, you should see a menu item on the left called "Administrative Sets." Under that menu, you can create a new administrative set. Give it a name and description and click save. Now you can assign it a workflow under the "Workflow" tab that will appear. You will also need to give it participants under the `participants` tab.
 
   You will also need to use the `workflow --> roles` menu to add users as approvers for the workflow.
 
@@ -71,6 +71,23 @@ Here is a console walk through of what you need to do. You could do this in a ra
   a.active_workflow
 
   => #<Sipity::Workflow id: 2, name: "one_step_mediated_deposit", label: "One-step mediated deposit workflow", description: "A single-step workflow for mediated deposit in whi...", created_at: "2017-04-25 18:21:41", updated_at: "2017-04-25 18:44:48", permission_template_id: 1, active: true, allows_access_grant: false>
+
+  # Now add participants to your workflow
+
+  workflow = a.active_workflow
+
+  # Get the Sipity::Role for depositing
+  depositing_role = Sipity::Role.where(name: "depositing")
+
+  # Get the Sipity::Role for approving
+  approving_role = Sipity::Role.where(name: "approving")
+
+  # Everyone with the "admin" role
+  admin_group = Sipity::Agent.where(proxy_for_id: "admin")
+
+  # Let everyone with the admin role execute the approval step in the mediated deposit workflow
+  # TODO: Why doesn't this work??
+  workflow.update_responsibilities(approving_role, admin_group)
 ```
 The AdminSet will be visible on the "relationships" tab of the deposit form. If you only have one admin set, it will be set by default. In order for it to work, a non-admin user must deposit a work, and an admin user must approve it.
 
