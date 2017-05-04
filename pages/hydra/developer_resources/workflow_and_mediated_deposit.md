@@ -62,10 +62,9 @@ Here is a console walk through of what you need to do. You could do this in a ra
 
   => #<ActiveRecord::Associations::CollectionProxy [#<Sipity::Workflow id: 1, name: "default", label: "Default workflow", description: "A single submission step, default workflow", created_at: "2017-04-25 18:21:41", updated_at: "2017-04-25 18:21:43", permission_template_id: 1, active: true, allows_access_grant: true>, #<Sipity::Workflow id: 2, name: "one_step_mediated_deposit", label: "One-step mediated deposit workflow", description: "A single-step workflow for mediated deposit in whi...", created_at: "2017-04-25 18:21:41", updated_at: "2017-04-25 18:21:43", permission_template_id: 1, active: nil, allows_access_grant: false>]>
 
-  # Note that the mediated workflow is the last one in available_workflows
-  mediated_workflow = available_workflows.last
+  mediated_workflow = a.permission_template.available_workflows.where(name: "one_step_mediated_deposit").first
 
-  Sipity::Workflow.activate!(permission_template: a.permission_template, workflow_id: mediated_workflow)
+  Sipity::Workflow.activate!(permission_template: a.permission_template, workflow_id: mediated_workflow.id)
 
   # Now calling #active_workflow should give you the mediated deposit workflow
   a.active_workflow
